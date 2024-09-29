@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  backend:
+    container_name: servercontainer
+    build: 
+      context: ./BackEnd
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+      - 3002:3002
+    volumes:
+      - ./BackEnd:/src/app
+      - /src/app/node_modules
+    depends_on:
+      - mysql_db
+  mysql_db:
+    container_name: dbcontainer
+    image: mysql
+    ports:
+      - 3307:3306
+    environment:
+      - MYSQL_DATABASE=task
+      - MYSQL_ROOT_PASSWORD=M@ein13!#nin
+      - MYSQL_PASSWORD=M@ein13!#nin
+      - MYSQL_TCP_PORT=3307
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+  web:
+    build:
+      context: ./FrontEnd
+      dockerfile: Dockerfile
+    ports:
+      - 5173:5173
+    volumes:
+      - ./FrontEnd:/usr/src/app
+      - /usr/src/app/node_modules
+volumes:
+  my-db:
